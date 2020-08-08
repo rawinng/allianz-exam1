@@ -1,0 +1,5 @@
+databaseChangeLog:
+- include:
+    file: migrations/001-schema.sql
+- include:
+    file: migrations/002-data-init.sql 
