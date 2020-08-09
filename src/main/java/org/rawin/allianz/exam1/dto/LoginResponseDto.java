@@ -2,11 +2,13 @@ package org.rawin.allianz.exam1.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Date;
+
 public class LoginResponseDto {
     @JsonProperty("generated_token")
     private String generatedToken;
     @JsonProperty("expiry_date")
-    private String expiryDate;
+    private Date expiryDate;
 
     public String getGeneratedToken() {
         return generatedToken;
@@ -16,11 +18,11 @@ public class LoginResponseDto {
         this.generatedToken = generatedToken;
     }
 
-    public String getExpiryDate() {
+    public Date getExpiryDate() {
         return expiryDate;
     }
 
-    public void setExpiryDate(String expiryDate) {
+    public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 }
