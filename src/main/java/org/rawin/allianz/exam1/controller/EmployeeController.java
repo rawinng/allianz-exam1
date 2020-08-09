@@ -5,6 +5,8 @@ import org.rawin.allianz.exam1.dto.EmployeeDtoMapper;
 import org.rawin.allianz.exam1.entity.Employee;
 import org.rawin.allianz.exam1.entity.EmployeeMapper;
 import org.rawin.allianz.exam1.service.EmployeeService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +17,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/api/employee")
 public class EmployeeController {
-
+	private static final Logger LOGGER = LoggerFactory.getLogger(EmployeeController.class);
 	@Autowired
 	EmployeeService employeeService;
 
@@ -31,6 +33,7 @@ public class EmployeeController {
 
 	@PostMapping
 	public ResponseEntity<EmployeeDto> save(@RequestBody EmployeeDto employeeDto) {
+		LOGGER.info("*** Get employee dto = {}", employeeDto);
 		if(employeeDto == null || !employeeDto.validated() || employeeDto.getId() != null) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -48,12 +51,19 @@ public class EmployeeController {
 			return ResponseEntity.badRequest().build();
 		}
 		Employee employee = employeeService.findOneEmployee(id);
+
+		if(employee == null) {
+			return ResponseEntity.notFound().build();
+		}
+
 		EmployeeDto employeeDto = EmployeeDtoMapper.INSTANCE.fromEmployee(employee);
 		return ResponseEntity.ok(employeeDto);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<EmployeeDto> update(@PathVariable("id") Integer id, @RequestBody EmployeeDto employeeDto) {
+		LOGGER.info("*** Get employee id = {}", id);
+		LOGGER.info("*** Get employee dto = {}", employeeDto);
 		if( id == null || employeeDto == null || !employeeDto.validated()) {
 			return ResponseEntity.badRequest().build();
 		}

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -23,21 +24,29 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee updateEmployee(Employee employee) {
-        return null;
+        Optional<Employee> employeeFromDbOpt = employeeRepository.findById(employee.getId());
+        if(!employeeFromDbOpt.isPresent()) {
+            throw new IllegalStateException("No employee in db");
+        }
+        Employee employeeFromDb = employeeFromDbOpt.get();
+        employeeFromDb.setFirstName(employee.getFirstName());
+        employeeFromDb.setLastName(employee.getLastName());
+        return employeeRepository.save(employeeFromDb);
     }
 
     @Override
     public Employee findOneEmployee(Integer id) {
-        return null;
+        Optional<Employee> employee = employeeRepository.findById(id);
+        return employee.orElse(null);
     }
 
     @Override
     public void deleteEmployee(Integer id) {
-
+        employeeRepository.deleteById(id);
     }
 
     @Override
     public Employee createEmployee(Employee employee) {
-        return null;
+        return employeeRepository.save(employee);
     }
 }

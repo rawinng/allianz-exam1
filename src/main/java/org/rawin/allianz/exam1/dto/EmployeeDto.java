@@ -1,7 +1,6 @@
 package org.rawin.allianz.exam1.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.rawin.allianz.exam1.entity.Employee;
 import org.springframework.util.StringUtils;
 
 public class EmployeeDto implements Validator<EmployeeDto> {
@@ -39,7 +38,13 @@ public class EmployeeDto implements Validator<EmployeeDto> {
     public boolean validated() {
         return validate(this);
     }
+
     public boolean validate(EmployeeDto employeeDto) {
-        return ! (StringUtils.isEmpty(employeeDto.firstName) || StringUtils.isEmpty(employeeDto.lastName));
+        return !(StringUtils.isEmpty(employeeDto.firstName) || StringUtils.isEmpty(employeeDto.lastName));
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + "[id=" + this.id + ",firstName=" + firstName + ",lastName=" + lastName + "]";
     }
 }

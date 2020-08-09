@@ -2,7 +2,7 @@
 
 --changeset rw-alliaz:1  
 create table employee  (  
-  id 		int primary key,  
+  id 		int auto_increment primary key,
   firstname varchar(255),
   lastname 	varchar(255)
 );  
