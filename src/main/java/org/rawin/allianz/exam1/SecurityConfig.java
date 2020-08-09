@@ -3,6 +3,7 @@ package org.rawin.allianz.exam1;
 import javax.sql.DataSource;
 
 import org.rawin.allianz.exam1.ext.CustomRestApiAuthenticationProvider;
+import org.rawin.allianz.exam1.ext.TokenAuthenticationFilter;
 import org.rawin.allianz.exam1.service.RestAuthenticationSupportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -12,30 +13,35 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import sun.tools.jstat.Token;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	@Autowired
-	DataSource dataSource;
 
 	@Autowired
 	RestAuthenticationSupportService restAuthSupportService;
-	
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-			.csrf().disable()
+			.csrf()
+				.disable()
 			.authorizeRequests()
-				.antMatchers("/login").permitAll()
-				.antMatchers("/api/*").hasRole("USER")
+				.antMatchers("/api/*")
+					.hasRole("USER")
+
+				.antMatchers("/login")
+					.permitAll()
 				.anyRequest()
-				.authenticated();
+				.authenticated()
+			.and()
+				.addFilterBefore(new TokenAuthenticationFilter(), BasicAuthenticationFilter.class);
 	}
 	
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		CustomRestApiAuthenticationProvider provider = new CustomRestApiAuthenticationProvider(restAuthSupportService);
-		auth.authenticationProvider(provider);
+		auth.authenticationProvider(new CustomRestApiAuthenticationProvider(restAuthSupportService));
 	}
 
 	@Bean

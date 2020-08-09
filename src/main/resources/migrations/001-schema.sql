@@ -25,7 +25,3 @@ create table users_session (
 );
 --rollback drop table authorities;
 
---changeset rw-alliaz:4
-create unique index ix_auth_username
-	  on authorities (username,authority);
---rollback drop index ix_auth_username

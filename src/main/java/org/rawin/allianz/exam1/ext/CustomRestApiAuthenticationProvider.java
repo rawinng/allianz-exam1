@@ -26,19 +26,17 @@ public class CustomRestApiAuthenticationProvider implements AuthenticationProvid
 		if(authentication == null) {
 			throw new InternalAuthenticationServiceException("auth object is null");
 		}
-		
-		Object authDetail = authentication.getDetails();
-		Object authPrin = authentication.getPrincipal();
-		String token = authDetail.toString();
-		Authentication restResult = this.restAuthen.createAuthenticationFromToken(token);
-		return new UsernamePasswordAuthenticationToken(restResult.getPrincipal(), 
-				restResult.getCredentials(), new ArrayList<>());
+
+		String token = (String) authentication.getPrincipal();
+		Authentication authenticationFromToken = this.restAuthen.createAuthenticationFromToken(token);
+		if(authenticationFromToken == null) {
+			throw new TokenAccessDenied("Invalid token : " + token);
+		}
+		return authenticationFromToken;
 	}
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		LOGGER.debug("class name to check = {}", authentication.getName()
-				);
-		return true;
+		return SessionTokenAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 }
