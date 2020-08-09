@@ -9,26 +9,23 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
 public class Swagger2DocketConfig {
     @Bean
     public Docket docket() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("alliaz-exam1")
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.regex("/api/employee.*|/login"))
                 .build()
                 ;
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Alliaz API")
+                .title("Alliaz Example API")
                 .description("Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum " +
                         "has been the industry's standard dummy text ever since the 1500s, when an unknown printer "
                         + "took a " +
